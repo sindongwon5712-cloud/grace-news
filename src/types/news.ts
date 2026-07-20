@@ -18,7 +18,6 @@ export interface NewsArticle {
   sourceName: string;
   sourceUrl: string;
   imageUrl: string;
-  isFallbackImage: boolean;
   category: NewsCategory;
   publishedAt: string; // ISO string
   verse: BibleVerse;

@@ -2,7 +2,7 @@
   "name": "grace-news",
   "version": "1.0.0",
   "private": true,
-  "description": "은혜뉴스 - 기독교 뉴스 3분 큐레이션",
+  "description": "디원뉴스 - 기독교 뉴스 3분 큐레이션",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

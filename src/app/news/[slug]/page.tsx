@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "article",
       title: article.title,
       description,
-      images: article.isFallbackImage ? undefined : [{ url: article.imageUrl }],
+      images: [{ url: article.imageUrl }],
       publishedTime: article.publishedAt,
     },
     twitter: {
@@ -65,10 +65,10 @@ export default async function NewsDetailPage({ params }: PageProps) {
     "@type": "NewsArticle",
     headline: article.title,
     datePublished: article.publishedAt,
-    image: article.isFallbackImage ? undefined : [article.imageUrl],
+    image: [article.imageUrl],
     publisher: {
       "@type": "Organization",
-      name: process.env.NEXT_PUBLIC_SITE_NAME || "은혜뉴스",
+      name: process.env.NEXT_PUBLIC_SITE_NAME || "디원뉴스",
     },
     description: article.summary.join(" "),
   };

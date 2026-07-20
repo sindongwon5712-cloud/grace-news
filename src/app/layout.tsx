@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "은혜뉴스";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "디원뉴스";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://grace-news.vercel.app";
 const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 const GOOGLE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;

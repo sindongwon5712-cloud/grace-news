@@ -1,36 +1,15 @@
 import { NewsCategory } from "@/types/news";
 
-const CATEGORY_THEME: Record<
-  NewsCategory,
-  { from: string; to: string; label: string; icon: string }
-> = {
-  선교: { from: "#c67f2a", to: "#824c1c", label: "선교", icon: "🌍" },
-  교회: { from: "#8a6d3b", to: "#4f3c1f", label: "교회", icon: "⛪" },
-  봉사: { from: "#b98a3f", to: "#6b4a1e", label: "봉사", icon: "🤝" },
-  문화: { from: "#a5631f", to: "#59341b", label: "문화", icon: "🎵" },
-  사회: { from: "#8f7355", to: "#4a3823", label: "사회", icon: "📰" },
-  칼럼: { from: "#9c7a4a", to: "#54401f", label: "칼럼", icon: "✍️" },
-};
-
 /**
- * 저작권 걱정 없는 카테고리별 기본 이미지를 SVG(Data URI)로 즉석 생성합니다.
- * 외부 이미지 서비스(Unsplash 등)에 의존하지 않으므로 배포 후 깨질 위험이 없습니다.
+ * 원본 기사에서 썸네일을 추출하지 못했을 때 쓰는 기본 이미지.
+ * Picsum Photos(picsum.photos)는 API 키 없이 실제 사진을 seed 기반으로 안정적으로
+ * 제공하는 무료 서비스로, 같은 seed(카테고리+slug)에는 항상 같은 사진이 매핑되어
+ * 새로고침해도 이미지가 바뀌지 않습니다. 카테고리별 주제(교회/선교 등)에 정확히
+ * 맞는 사진은 아니지만, 실제 사진이 필요하다는 요구에 맞춰 아이콘 대신 사용합니다.
  */
-export function getFallbackImage(category: NewsCategory): string {
-  const theme = CATEGORY_THEME[category] ?? CATEGORY_THEME["교회"];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
-    <defs>
-      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="${theme.from}"/>
-        <stop offset="100%" stop-color="${theme.to}"/>
-      </linearGradient>
-    </defs>
-    <rect width="800" height="450" fill="url(#g)"/>
-    <text x="50%" y="45%" font-size="90" text-anchor="middle" dominant-baseline="middle">${theme.icon}</text>
-    <text x="50%" y="68%" font-size="34" font-family="sans-serif" font-weight="600" fill="#fdf8f0" text-anchor="middle" dominant-baseline="middle">${theme.label} 소식</text>
-  </svg>`;
-  const encoded = Buffer.from(svg).toString("base64");
-  return `data:image/svg+xml;base64,${encoded}`;
+export function getFallbackImage(category: NewsCategory, seed: string): string {
+  const key = encodeURIComponent(`${category}-${seed}`);
+  return `https://picsum.photos/seed/${key}/800/450`;
 }
 
 interface RawRssItem {

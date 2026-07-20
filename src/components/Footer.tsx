@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "은혜뉴스";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "디원뉴스";
 
 export default function Footer() {
   return (

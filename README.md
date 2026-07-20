@@ -1,4 +1,4 @@
-# 은혜뉴스 (Grace News)
+# 디원뉴스 (grace-news)
 
 기독교 교계 소식을 여러 사이트에서 일일이 찾아볼 필요 없이, 한 곳에 모아 **3줄 요약 + 관련 성경 구절**로 보여주는 뉴스 큐레이션 웹앱입니다. Next.js 14(App Router) + Tailwind CSS로 제작되었고, 애드센스 광고 수익화와 SEO(검색엔진 최적화)를 염두에 두고 구성했습니다.
 
@@ -73,7 +73,7 @@ grace-news/
    ```bash
    git init
    git add .
-   git commit -m "Initial commit: 은혜뉴스"
+   git commit -m "Initial commit: 디원뉴스"
    git branch -M main
    git remote add origin <your-github-repo-url>
    git push -u origin main

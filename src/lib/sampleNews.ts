@@ -10,10 +10,12 @@ interface SampleSeed {
   daysAgo: number;
 }
 
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "디원뉴스";
+
 /**
  * 애드센스 심사 및 초기 방문자 경험을 위한 기본 예시 콘텐츠입니다.
- * 외부 언론사 기사를 그대로 옮긴 것이 아니라 은혜뉴스 편집팀이 작성한
- * 자체 정보성 콘텐츠이므로 출처는 '은혜뉴스'로 표시되며 저작권 문제가 없습니다.
+ * 외부 언론사 기사를 그대로 옮긴 것이 아니라 자체 편집팀이 작성한
+ * 정보성 콘텐츠이므로 저작권 문제가 없습니다.
  * 실제 RSS 피드가 정상 수집되면 최신 뉴스가 상단에 먼저 노출되고,
  * 이 예시 콘텐츠는 그 아래에 계속 보조 콘텐츠로 남아 있습니다.
  */
@@ -162,10 +164,9 @@ export function getSampleArticles(): NewsArticle[] {
       slug: seed.slug,
       title: seed.title,
       summary: seed.summary,
-      sourceName: "은혜뉴스 편집팀",
+      sourceName: `${SITE_NAME} 편집팀`,
       sourceUrl: "/about",
-      imageUrl: getFallbackImage(seed.category),
-      isFallbackImage: true,
+      imageUrl: getFallbackImage(seed.category, seed.slug),
       category: seed.category,
       publishedAt,
       verse: pickVerse(seed.category, seed.slug),

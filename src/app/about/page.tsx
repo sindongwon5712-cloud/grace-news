@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "은혜뉴스";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "디원뉴스";
 
 export const metadata: Metadata = {
   title: "소개",
