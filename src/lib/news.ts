@@ -1,7 +1,8 @@
 import { createHash } from "crypto";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { ALL_CATEGORIES, NewsArticle, NewsCategory } from "@/types/news";
-import { FEEDS } from "./feeds";
+import { FEEDS, REVALIDATE_SECONDS } from "./feeds";
 import { fetchAllFeeds, RssItem } from "./rss";
 import { extractImageFromItem, fetchArticleOgImage, getFallbackImage } from "./image";
 import { pickVerse } from "./bibleVerses";
@@ -57,11 +58,7 @@ function dedupeBySlug(articles: NewsArticle[]): NewsArticle[] {
   return [...map.values()];
 }
 
-/**
- * 전체 기사 목록을 가져옵니다. React `cache()`로 감싸 동일 렌더 사이클(같은 요청) 내
- * 여러 페이지/메타데이터 함수에서 중복 호출되어도 한 번만 실제로 수집합니다.
- */
-export const getAllArticles = cache(async (): Promise<NewsArticle[]> => {
+async function collectAllArticles(): Promise<NewsArticle[]> {
   const items = await fetchAllFeeds(FEEDS);
   const mapped = await Promise.all(items.map(mapItemToArticle));
   const rssArticles = mapped.filter((a): a is NewsArticle => a !== null);
@@ -72,7 +69,23 @@ export const getAllArticles = cache(async (): Promise<NewsArticle[]> => {
   return combined.sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
-});
+}
+
+/**
+ * 전체 기사 목록을 가져옵니다.
+ *
+ * `unstable_cache`로 감싸 Next.js 데이터 캐시에 결과를 저장합니다 — 이게 없으면
+ * 홈/카테고리 6개/뉴스 상세 30개/사이트맵이 각각 별도로 이 함수를 실행하면서
+ * (원본 기사 사진 스크래핑처럼) 실패해서 캐시되지 않는 외부 요청을 페이지 수만큼
+ * 반복 재시도하게 되어 빌드 시간이 크게 늘어납니다. `unstable_cache`로 빌드/ISR
+ * 주기당 단 한 번만 실제로 수집하도록 고정하고, React `cache()`는 그 위에서
+ * 동일 렌더 한 번 안의 중복 호출만 추가로 없애줍니다.
+ */
+export const getAllArticles = cache(
+  unstable_cache(collectAllArticles, ["all-articles"], {
+    revalidate: REVALIDATE_SECONDS,
+  })
+);
 
 export async function getArticleBySlug(slug: string): Promise<NewsArticle | undefined> {
   const all = await getAllArticles();
