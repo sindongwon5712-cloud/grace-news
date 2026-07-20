@@ -27,6 +27,8 @@ export interface NewsArticle {
   sourceName: string;
   sourceUrl: string;
   imageUrl: string;
+  imageCaption?: string; // 원본 기사에서 함께 추출한 사진 설명 (있을 때만)
+  isOriginalImage: boolean; // true면 원본 기사의 실제 사진, false면 카테고리 연관 자료사진
   category: NewsCategory;
   publishedAt: string; // ISO string
   verse: BibleVerse;

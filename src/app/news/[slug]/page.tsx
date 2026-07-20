@@ -94,10 +94,20 @@ export default async function NewsDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
+      <figure className="overflow-hidden rounded-2xl border border-slate-200">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={article.imageUrl} alt={article.title} className="w-full object-cover" />
-      </div>
+        <figcaption className="border-t border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-400">
+          {article.isOriginalImage ? (
+            <>
+              {article.imageCaption ? `${article.imageCaption} · ` : ""}
+              사진 출처: {article.sourceName}
+            </>
+          ) : (
+            `자료사진 · ${article.category} 관련 이미지`
+          )}
+        </figcaption>
+      </figure>
 
       <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_INLINE} label="본문 상단 광고" />
 

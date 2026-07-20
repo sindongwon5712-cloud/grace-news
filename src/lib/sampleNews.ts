@@ -167,6 +167,7 @@ export function getSampleArticles(): NewsArticle[] {
       sourceName: `${SITE_NAME} 편집팀`,
       sourceUrl: "/about",
       imageUrl: getFallbackImage(seed.category, seed.slug),
+      isOriginalImage: false,
       category: seed.category,
       publishedAt,
       verse: pickVerse(seed.category, seed.slug),

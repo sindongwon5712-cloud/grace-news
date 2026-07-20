@@ -3,7 +3,7 @@ import { cache } from "react";
 import { ALL_CATEGORIES, NewsArticle, NewsCategory } from "@/types/news";
 import { FEEDS } from "./feeds";
 import { fetchAllFeeds, RssItem } from "./rss";
-import { extractImageFromItem, getFallbackImage } from "./image";
+import { extractImageFromItem, fetchArticleOgImage, getFallbackImage } from "./image";
 import { pickVerse } from "./bibleVerses";
 import { summarizeToThreeLines, stripHtml } from "./summarize";
 import { getSampleArticles } from "./sampleNews";
@@ -26,16 +26,23 @@ async function mapItemToArticle(item: RssItem): Promise<NewsArticle | null> {
     item["content:encoded"] || item.content || item.contentSnippet || "";
   const title = stripHtml(item.title) || item.title.trim();
   const summary = await summarizeToThreeLines(title, rawContent);
-  const extractedImage = extractImageFromItem(item);
   const category = item.source.category;
+
+  // 1순위: RSS가 직접 제공하는 썸네일. 2순위: 원본 기사 페이지에서 실제 사진 스크래핑.
+  // 3순위: 카테고리 연관 자료사진 (원본 사진을 전혀 구하지 못했을 때만).
+  const rssImage = extractImageFromItem(item);
+  const scraped = rssImage ? undefined : await fetchArticleOgImage(item.link);
+  const originalImage = rssImage || scraped?.url;
 
   return {
     slug,
     title,
     summary,
-    sourceName: item.source.name.replace(/^구글 뉴스 - /, "") || "출처 미상",
+    sourceName: item.source.name || "출처 미상",
     sourceUrl: item.link,
-    imageUrl: extractedImage || getFallbackImage(category, slug),
+    imageUrl: originalImage || getFallbackImage(category, slug),
+    imageCaption: scraped?.caption,
+    isOriginalImage: Boolean(originalImage),
     category,
     publishedAt: toIsoDate(item.pubDate),
     verse: pickVerse(category, slug),

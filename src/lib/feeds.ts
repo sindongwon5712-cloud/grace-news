@@ -7,42 +7,48 @@ export interface FeedConfig {
 }
 
 /**
- * 기본 피드 목록.
+ * 실제 기독교 언론사의 RSS 피드 목록.
  *
- * 구글 뉴스 RSS(키워드 검색)는 URL 구조가 안정적으로 문서화되어 있어
- * 별도 API 키 없이 바로 동작하는 기본값으로 사용합니다.
- * https://news.google.com/rss/search?q=검색어&hl=ko&gl=KR&ceid=KR:ko
+ * 구글 뉴스 검색 RSS는 기사 링크가 구글의 자바스크립트 리다이렉트 페이지로
+ * 감싸져 있어(news.google.com/rss/articles/...) 원본 기사의 실제 사진을
+ * 가져올 수 없다는 한계가 있어, 각 언론사가 직접 제공하는 RSS로 교체했습니다.
+ * 이렇게 하면 링크가 원문 기사로 바로 연결되어 사진 출처를 정확히 밝힐 수 있고,
+ * 이미지도 실제 기사 사진을 가져올 수 있습니다.
  *
- * 특정 언론사(크리스천투데이, 국민일보 미션라이프, 뉴스앤조이, 기독신문 등)의
- * 자체 RSS 주소를 알고 있다면 아래 배열에 { name, url, category } 형태로
- * 추가/교체하세요. 각 언론사 사이트 하단의 'RSS' 링크에서 정확한 주소를
- * 확인한 뒤 넣는 것을 권장합니다 (언론사마다 주소 형식이 다르고 수시로 바뀔 수 있음).
+ * 각 언론사는 편의상 카테고리 하나씩에 매칭해 두었지만, 실제로는 각 언론사가
+ * 다양한 주제를 함께 다룹니다. 특정 언론사의 세부 섹션(선교/봉사 등) RSS 주소를
+ * 알고 있다면 더 정교하게 교체하세요.
  */
 export const FEEDS: FeedConfig[] = [
   {
-    name: "구글 뉴스 - 기독교",
-    url: "https://news.google.com/rss/search?q=%EA%B8%B0%EB%8F%85%EA%B5%90&hl=ko&gl=KR&ceid=KR:ko",
-    category: "교회",
-  },
-  {
-    name: "구글 뉴스 - 교회",
-    url: "https://news.google.com/rss/search?q=%EA%B5%90%ED%9A%8C&hl=ko&gl=KR&ceid=KR:ko",
-    category: "교회",
-  },
-  {
-    name: "구글 뉴스 - 선교",
-    url: "https://news.google.com/rss/search?q=%EC%84%A0%EA%B5%90&hl=ko&gl=KR&ceid=KR:ko",
+    name: "데일리굿뉴스",
+    url: "https://www.goodnews1.com/rss/allArticle.xml",
     category: "선교",
   },
   {
-    name: "구글 뉴스 - 봉사",
-    url: "https://news.google.com/rss/search?q=%EA%B5%90%ED%9A%8C%20%EB%B4%89%EC%82%AC&hl=ko&gl=KR&ceid=KR:ko",
+    name: "뉴스앤조이",
+    url: "https://www.newsnjoy.or.kr/rss/allArticle.xml",
+    category: "교회",
+  },
+  {
+    name: "아이굿뉴스",
+    url: "https://www.igoodnews.net/rss/allArticle.xml",
     category: "봉사",
   },
   {
-    name: "구글 뉴스 - 크리스천 문화",
-    url: "https://news.google.com/rss/search?q=%ED%81%AC%EB%A6%AC%EC%8A%A4%EC%B2%9C%20%EB%AC%B8%ED%99%94&hl=ko&gl=KR&ceid=KR:ko",
+    name: "당당뉴스",
+    url: "https://www.dangdangnews.com/rss/allArticle.xml",
     category: "문화",
+  },
+  {
+    name: "한국기독공보",
+    url: "https://www.pckworld.com/rss/allArticle.xml",
+    category: "사회",
+  },
+  {
+    name: "교회와신앙",
+    url: "https://www.amennews.com/rss/allArticle.xml",
+    category: "칼럼",
   },
 ];
 

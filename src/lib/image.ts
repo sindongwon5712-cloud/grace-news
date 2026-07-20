@@ -1,4 +1,5 @@
 import { NewsCategory } from "@/types/news";
+import { REVALIDATE_SECONDS } from "./feeds";
 
 /**
  * 카테고리별로 실제 주제와 연관된 사진을 검색해서 보여주기 위한 영어 키워드.
@@ -32,6 +33,71 @@ export function getFallbackImage(category: NewsCategory, seed: string): string {
   const keywords = CATEGORY_KEYWORDS[category] ?? CATEGORY_KEYWORDS["교회"];
   const lock = hashToInt(`${category}-${seed}`);
   return `https://loremflickr.com/800/450/${keywords}?lock=${lock}`;
+}
+
+function extractMetaContent(html: string, property: string): string | undefined {
+  const patterns = [
+    new RegExp(`<meta[^>]+property=["']${property}["'][^>]+content=["']([^"']+)["']`, "i"),
+    new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+property=["']${property}["']`, "i"),
+    new RegExp(`<meta[^>]+name=["']${property}["'][^>]+content=["']([^"']+)["']`, "i"),
+    new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+name=["']${property}["']`, "i"),
+  ];
+  for (const pattern of patterns) {
+    const match = html.match(pattern);
+    if (match?.[1]) return match[1];
+  }
+  return undefined;
+}
+
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
+export interface ScrapedArticleImage {
+  url: string;
+  caption?: string;
+}
+
+/**
+ * 원본 기사 페이지에 직접 접속해 실제 사진(og:image)과, 있다면 사진 설명(figcaption)을
+ * 함께 가져옵니다. RSS에 이미지가 없는 경우(구글 뉴스 등 대부분)에만 호출되는
+ * 보조 수단이며, 실패하거나 시간이 오래 걸리면 조용히 undefined를 반환해
+ * 카테고리 연관 자료사진으로 자연스럽게 대체됩니다.
+ */
+export async function fetchArticleOgImage(
+  articleUrl: string
+): Promise<ScrapedArticleImage | undefined> {
+  try {
+    const res = await fetch(articleUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; DwonNewsBot/1.0)" },
+      next: { revalidate: REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return undefined;
+
+    const html = await res.text();
+    const imageUrl = extractMetaContent(html, "og:image") || extractMetaContent(html, "twitter:image");
+    if (!imageUrl) return undefined;
+
+    const figcaptionMatch = html.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/i);
+    const rawCaption = figcaptionMatch?.[1]
+      ?.replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const caption =
+      rawCaption && rawCaption.length > 3 && rawCaption.length < 120
+        ? decodeHtmlEntities(rawCaption)
+        : undefined;
+
+    return { url: imageUrl, caption };
+  } catch {
+    return undefined;
+  }
 }
 
 interface RawRssItem {
