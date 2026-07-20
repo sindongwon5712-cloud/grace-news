@@ -40,12 +40,17 @@ export default async function CategoryPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-extrabold text-ink">{category} 소식</h1>
+      <div>
+        <span className="inline-block rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+          카테고리
+        </span>
+        <h1 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">{category} 소식</h1>
+      </div>
 
       <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP} label="상단 광고" />
 
       {articles.length === 0 ? (
-        <p className="text-ink/60">아직 등록된 {category} 소식이 없습니다.</p>
+        <p className="text-slate-500">아직 등록된 {category} 소식이 없습니다.</p>
       ) : (
         <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (

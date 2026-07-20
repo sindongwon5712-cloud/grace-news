@@ -6,6 +6,15 @@ export type NewsCategory =
   | "사회"
   | "칼럼";
 
+export const ALL_CATEGORIES: NewsCategory[] = [
+  "선교",
+  "교회",
+  "봉사",
+  "문화",
+  "사회",
+  "칼럼",
+];
+
 export interface BibleVerse {
   reference: string;
   text: string;

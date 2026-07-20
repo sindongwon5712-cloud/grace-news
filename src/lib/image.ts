@@ -1,15 +1,37 @@
 import { NewsCategory } from "@/types/news";
 
 /**
+ * 카테고리별로 실제 주제와 연관된 사진을 검색해서 보여주기 위한 영어 키워드.
+ * LoremFlickr는 Flickr의 실제 사진을 태그로 검색해 제공하므로, 한글 카테고리명 대신
+ * 검색이 잘 되는 영어 키워드를 매핑해 둡니다.
+ */
+const CATEGORY_KEYWORDS: Record<NewsCategory, string> = {
+  선교: "missionary,christian",
+  교회: "church,cathedral",
+  봉사: "volunteer,charity",
+  문화: "worship,music",
+  사회: "community,people",
+  칼럼: "bible,book",
+};
+
+function hashToInt(seed: string): number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return hash;
+}
+
+/**
  * 원본 기사에서 썸네일을 추출하지 못했을 때 쓰는 기본 이미지.
- * Picsum Photos(picsum.photos)는 API 키 없이 실제 사진을 seed 기반으로 안정적으로
- * 제공하는 무료 서비스로, 같은 seed(카테고리+slug)에는 항상 같은 사진이 매핑되어
- * 새로고침해도 이미지가 바뀌지 않습니다. 카테고리별 주제(교회/선교 등)에 정확히
- * 맞는 사진은 아니지만, 실제 사진이 필요하다는 요구에 맞춰 아이콘 대신 사용합니다.
+ * LoremFlickr(loremflickr.com)는 API 키 없이 카테고리 키워드로 실제 Flickr 사진을
+ * 가져올 수 있는 무료 서비스입니다. `lock` 파라미터에 slug 기반 고정값을 넣어
+ * 같은 기사에는 항상 같은 사진이 매핑되도록(새로고침해도 안 바뀌도록) 합니다.
  */
 export function getFallbackImage(category: NewsCategory, seed: string): string {
-  const key = encodeURIComponent(`${category}-${seed}`);
-  return `https://picsum.photos/seed/${key}/800/450`;
+  const keywords = CATEGORY_KEYWORDS[category] ?? CATEGORY_KEYWORDS["교회"];
+  const lock = hashToInt(`${category}-${seed}`);
+  return `https://loremflickr.com/800/450/${keywords}?lock=${lock}`;
 }
 
 interface RawRssItem {

@@ -81,26 +81,27 @@ export default async function NewsDetailPage({ params }: PageProps) {
       />
 
       <div>
-        <span className="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">
+        <span className="inline-block rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
           {article.category}
         </span>
         <h1 className="mt-3 text-2xl font-extrabold leading-snug text-ink sm:text-3xl">
           {article.title}
         </h1>
-        <div className="mt-2 flex gap-3 text-sm text-ink/50">
-          <span>{article.sourceName}</span>
+        <div className="mt-2 flex items-center gap-2 text-sm text-slate-400">
+          <span className="font-medium text-slate-500">{article.sourceName}</span>
+          <span aria-hidden>·</span>
           <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl">
+      <div className="overflow-hidden rounded-2xl border border-slate-200">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={article.imageUrl} alt={article.title} className="w-full object-cover" />
       </div>
 
       <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_INLINE} label="본문 상단 광고" />
 
-      <ul className="flex flex-col gap-3 rounded-xl bg-white p-5 text-[15px] leading-relaxed text-ink shadow-sm">
+      <ul className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-[15px] leading-relaxed text-ink shadow-card">
         {article.summary.map((line, idx) => (
           <li key={idx} className="flex gap-2">
             <span className="font-bold text-brand-500">{idx + 1}.</span>
@@ -115,7 +116,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         href={article.sourceUrl}
         target="_blank"
         rel="noopener noreferrer nofollow"
-        className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-brand-700"
+        className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-brand-700"
       >
         원본 기사 보러가기 →
       </Link>

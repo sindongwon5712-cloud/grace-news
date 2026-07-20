@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 import { cache } from "react";
-import { NewsArticle, NewsCategory } from "@/types/news";
+import { ALL_CATEGORIES, NewsArticle, NewsCategory } from "@/types/news";
 import { FEEDS } from "./feeds";
 import { fetchAllFeeds, RssItem } from "./rss";
 import { extractImageFromItem, getFallbackImage } from "./image";
@@ -77,11 +77,4 @@ export async function getArticlesByCategory(category: NewsCategory): Promise<New
   return all.filter((a) => a.category === category);
 }
 
-export const ALL_CATEGORIES: NewsCategory[] = [
-  "선교",
-  "교회",
-  "봉사",
-  "문화",
-  "사회",
-  "칼럼",
-];
+export { ALL_CATEGORIES };

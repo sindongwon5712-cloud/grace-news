@@ -38,7 +38,7 @@ export default function AdSlot({ slot, label = "광고", className = "" }: AdSlo
   if (!ADSENSE_CLIENT || !slot) {
     return (
       <div
-        className={`flex items-center justify-center rounded-lg border border-dashed border-brand-300 bg-brand-50 py-8 text-sm text-brand-500 ${className}`}
+        className={`flex items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 py-8 text-sm text-slate-400 ${className}`}
         aria-hidden
       >
         {label} 영역 (애드센스 승인 후 자동 표시)

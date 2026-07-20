@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "디원뉴스";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://grace-news.vercel.app";
@@ -44,8 +51,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className="flex min-h-screen flex-col font-sans antialiased">
+    <html lang="ko" className={inter.variable}>
+      <body className="flex min-h-screen flex-col bg-slate-50 font-sans antialiased">
         <Header />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>
         <Footer />
